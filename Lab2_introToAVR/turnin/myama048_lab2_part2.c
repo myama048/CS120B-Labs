@@ -32,12 +32,15 @@ int main(void) {
 	else if (tempA == 0x07 || tempA == 0x0B || tempA == 0x0D || tempA == 0x0E){
 		cntavail = 0x01;
 	}
+	else if(tempA == 0x0F){
+		cntavail = 0;
+	}
 	else {
 		cntavail = 0x02;
 	}
 
 	PORTC = cntavail;
-
+	
     }
     return 1;
 }
