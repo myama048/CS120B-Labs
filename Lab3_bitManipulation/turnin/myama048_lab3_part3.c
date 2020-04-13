@@ -21,12 +21,12 @@ int main(void) {
 	unsigned char tempA, tempC;
     /* Insert your solution below */
     while (1) {
-	tempA = PINA & 0xFF;
+	tempA = PINA & 0x0F;
 	tempC = 0x00;
 	unsigned char low = 0;
-	unsigned char key = (PINA & 0x10) >> 4;
-	unsigned char seated = (PINA & 0x20) >> 5;
-	unsigned char seatbelt = (PINA & 0x40) >> 6;
+	unsigned char key = PINA & 0x10;
+	unsigned char seated = PINA & 0x20;
+	unsigned char seatbelt = PINA & 0x40;
 
 
 	if(PINA <= 4){
@@ -56,7 +56,7 @@ int main(void) {
 		tempC = tempC | 0x40;	
 	}
 
-	if(key == 1 && seated == 1 && seatbelt == 0) {
+	if((key == 0x10) && (seated == 0x20) && (seatbelt == 0x00)) {
 		tempC = tempC | 0x80;
 	}
 	
