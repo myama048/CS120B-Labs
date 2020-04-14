@@ -29,7 +29,7 @@ int main(void) {
 	unsigned char seatbelt = PINA & 0x40;
 
 
-	if(PINA <= 4){
+	if(tempA <= 4){
 		low = 1;
 	}		
 	
