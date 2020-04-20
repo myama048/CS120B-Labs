@@ -78,6 +78,7 @@ int main(void) {
 	//unsigned char  tempC;
 	//unsigned char button = 0;
 	state = Start;
+	unsigned char inlock = 1;
     /* Insert your solution below */
     while (1){
 	//Tick();
@@ -113,7 +114,12 @@ int main(void) {
 				break;
 		case s3:	if(PINA == 0x80){
 					state = s0;
+					inlock = 1;
 				}
+				else if (PINA == 0x04){
+					state = s1;
+					inlock = 0;
+				}	
 				else {
 					state = s3;
 				}
@@ -122,11 +128,16 @@ int main(void) {
 	}
 
 	switch(state){
-		case s0:
-		case s1:
-		case s2:	PORTB = 0x00;
+		case s0:	PORTB = 0x00;
 				break;
-		case s3:	PORTB = 0x01;
+		case s1:	break;
+		case s2:	break;
+		case s3:	if(inlock == 1){
+					PORTB = 0x01;
+				}
+				else {
+					PORTB = 0x00;
+				}
 		default:	break;
 	}
 

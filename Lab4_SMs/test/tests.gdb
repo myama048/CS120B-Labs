@@ -38,11 +38,11 @@ expectPORTB 0
 checkResult
 
 # Add tests below
-#test "2"
-#setPINA 0x03
-#continue 2
-#expectPORTB 0
-#checkResult
+test "2"
+setPINA 0x03
+continue 2
+expectPORTB 0
+checkResult
 
 test "3"
 setPINA 0x04
@@ -64,10 +64,40 @@ checkResult
 
 
 test "4"
+setPINA 0x04
+continue 2
+
+test "4.1"
+setPINA 0x00
+continue 2
+
+test "4.2"
+setPINA 0x02
+continue 2
+expectPORTB 0x00
+checkResult
+
+test "5"
+setPINA 0x04
+continue 2
+
+test "5.1"
+setPINA 0x00
+continue 2
+
+teset "5.2"
+setPINA 0x02
+continue 2
+expectPORTB 0x00
+checkResult
+
+test "6"
 setPINA 0x80
 continue 2
-expectPORTB 0
+expectPORTB 0x00
 checkResult
+
+
 
 test "5"
 setPINA 0x04
