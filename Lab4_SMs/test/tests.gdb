@@ -33,33 +33,46 @@ setPINA 0x00
 # Continue for several ticks
 continue 2
 # Set expect values
-expectPORTC 7
+expectPORTB 0
 # Check pass/fail
 checkResult
 
 # Add tests below
-test "2"
-setPINA 0x01
-continue 2
-expectPORTC 8
-checkResult
+#test "2"
+#setPINA 0x03
+#continue 2
+#expectPORTB 0
+#checkResult
 
 test "3"
-setPINA 0x01
-continue 2
-expectPORTC 8
+setPINA 0x04
+continue 1
+expectPORTB 0
 checkResult
 
+test "3-2"
+setPINA 0
+continue 1
+expectPORTB 0
+checkResult
+
+test "3-3"
+setPINA 0x02
+continue 1
+expectPORTB 0x01
+checkResult
+
+
 test "4"
-setPINA 0x00
-continue 2
-expectPORTC 8
+setPINA 0x80
+continue 1
+expectPORTB 0
 checkResult
 
 test "5"
-setPINA 0x01
-continue 2
-expectPORTC 9
+setPINA 0x04
+continue 1
+expectPORTB 0
 checkResult
 
 # Report on how many tests passed/tests ran
