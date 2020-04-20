@@ -19,26 +19,34 @@ int main(void) {
 	DDRC = 0xF8; PORTC = 0x07;
 
 	unsigned char  tempC;
-	
+	unsigned char button = 0;
     /* Insert your solution below */
     while (1){
 	tempC = PORTC;	
-
-	if (PINA = 0x00) {//depressed
-		tempC = 0;
-	}
-	else if (PINA = 0x01){ //inc
-		if (tempC < 9){
-			tempC++;
-		}
 		
-	}
-	else if (PINA = 0x02){
-		if (tempC > 0){
-			tempC--;
+	if (button == 0){
+		if (PINA == 0x03) {//depressed
+			tempC = 0;
+			button = 1;
+		}
+		else if (PINA == 0x01){ //inc
+			if (tempC < 9){
+				tempC++;
+				button = 1;
+			}
+		}
+		else if (PINA == 0x02){
+			if (tempC > 0){
+				tempC--;
+				button = 1;
+			}
 		}
 	}
-	
+	else {
+		if (PINA == 0){
+			button = 0;
+		}
+	}
 	PORTC = tempC;
     }
     return 1;
