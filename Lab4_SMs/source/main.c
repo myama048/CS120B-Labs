@@ -15,24 +15,55 @@
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFF; PORTB = 0x00;
+	DDRB = 0xFE; PORTB = 0x01;
 
-	unsigned char tempA, tempB;
+	unsigned char  tempB;
+	unsigned char button = 0;
     /* Insert your solution below */
-    while (1) {
+    while (1){
 
-	tempA = PINA & 0xFF;	
-	PORTB = 0x01;
 	tempB = PORTB;	// PB0 is initially ON
-		
-
-	if((tempA & 0x01) == 0x01){
-		tempB = PORTB & 0x02;	
+	
+	if (tempB == 0x01){
+		if(button == 0){
+			if(PINA == 1){
+				button = 1;
+				tempB = 0x02;
+			}
+			else {
+				button = 0;// stay
+			}
+		}
+		else {
+			if(PINA == 0){
+				button = 0;
+				tempB = 0x01;
+			}
+			else {
+				button = 1;
+			}
+		}
 	}
-	else if((tempA & 0x01) == 0x01){
-		tempB = PORTB & 0x01;
+	else {
+		if(button == 1){
+			if(PINA == 0){
+				button = 0;
+			}
+			else {
+				button = 1;
+			}
+		}
+		else {
+			if(PINA == 1){
+				button = 1;
+				tempB = 0x01;
+			}
+			else {
+				button = 0;
+			}
+		}
 	}
-
+	
 	PORTB = tempB;
 	
     }
