@@ -94,6 +94,9 @@ int main(void) {
 		case s1:	if (PINA == 0x00){
 					state = s2;
 				}
+				else if(PINA == 0x04){
+					state = s1;
+				}
 				else {
 					state = s0;//s0
 				}
@@ -101,11 +104,14 @@ int main(void) {
 		case s2:	if (PINA == 0x02) {
 					state = s3;
 				}
+				else if(PINA == 0x00){
+					state = s2;
+				}
 				else {
 					state = s0;//s0
 				}
 				break;
-		case s3:	if( PINA == 0x80){
+		case s3:	if(PINA == 0x80){
 					state = s0;
 				}
 				else {

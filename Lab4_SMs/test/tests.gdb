@@ -46,26 +46,26 @@ checkResult
 
 test "3"
 setPINA 0x04
-continue 1
+continue 2
 expectPORTB 0
 checkResult
 
 test "3-2"
 setPINA 0
-continue 1
+continue 2
 expectPORTB 0
 checkResult
 
 test "3-3"
 setPINA 0x02
-continue 1
+continue 2
 expectPORTB 0x01
 checkResult
 
 
 test "4"
 setPINA 0x80
-continue 1
+continue 2
 expectPORTB 0
 checkResult
 
