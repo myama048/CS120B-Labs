@@ -83,7 +83,7 @@ int main(void) {
 
 	unsigned char low = 0;
 
-	if(tempA > 0 && tempA <= 4){
+	if(tempA >= 0 && tempA <= 4){
 		low = 1;
 	}
 
