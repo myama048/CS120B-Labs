@@ -19,24 +19,24 @@ int main(void) {
 	DDRA = 0xF0;	PORTA = 0x0F;
 	DDRC = 0x7F;	PORTC = 0x80;
 	
-	unsigned char tempC = 0;
+	unsigned char tempA,  tempC = 0;
 	state = Start;
 	unsigned char cnt = 0;
 	unsigned char flip = 0;
     /* Insert your solution below */
     while (1) {
 
-	//tempA = ~PINA & 0x0F;
+	tempA = ~PINA & 0x0F;
 	//tempA = PINA;
 
 	switch(state){
 		case Start:	state = Wait;
 				break;
-		case Wait:	if(flip == 0 && PINA == 1){
+		case Wait:	if(flip == 0 && tempA == 1){
 					state = PosPress;
 					cnt++;
 				}
-				else if(flip == 1 && PINA == 1){
+				else if(flip == 1 && tempA == 1){
 					state = NegPress;
 					cnt++;
 				}
@@ -46,9 +46,9 @@ int main(void) {
 				break;
 		case PosPress:	state = PosRel;
 				break;
-		case PosRel:	if(PINA == 0){
-					if(cnt > 6){
-						flip = ~flip;
+		case PosRel:	if(tempA == 0){
+					if(cnt > 7){
+						flip = 1;
 						cnt = 0;
 					}
 					state = Wait;
@@ -59,9 +59,9 @@ int main(void) {
 				break;
 		case NegPress:	state = NegRel;
 				break;
-		case NegRel:	if(PINA == 0){
-					if(cnt > 6){
-						flip = ~flip;
+		case NegRel:	if(tempA == 0){
+					if(cnt > 7){
+						flip = 0;
 						cnt = 0;
 					}
 					state = Wait;

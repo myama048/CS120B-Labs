@@ -94,9 +94,18 @@ checkResult
 
 test "5-"
 setPINA 0
+continue 2
+expectPORTC 8
+checkResult
 
-test "5"
+test "5.2"
 setPINA 1
+continue 2
+expectPORTC 0x10
+checkResult
+
+test "5.2-"
+setPINA 0
 continue 2
 expectPORTC 0x10
 checkResult
@@ -110,6 +119,24 @@ checkResult
 test "7"
 setPINA 1
 continue 2
+expectPORTC 0x20
+checkResult
+
+test "7-"
+setPINA 0
+continue 2
+expectPORTC 0x20
+checkResult
+
+test "7.1"
+setPINA 1
+continue 2
+expectPORTC 0x40
+checkResult
+
+test "7.1-"
+setPINA 0
+continue 2
 expectPORTC 0x40
 checkResult
 
@@ -119,8 +146,20 @@ continue 2
 expectPORTC 0x80 #change
 checkResult
 
+test "8.8"
+setPINA 0
+continue 2
+expectPORTC 0x80
+checkResult
+
 test "9"
 setPINA 1
+continue 2
+expectPORTC 0x40
+checkResult
+
+test "9-"
+setPINA 0
 continue 2
 expectPORTC 0x40
 checkResult
