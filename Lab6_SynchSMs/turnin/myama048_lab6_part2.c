@@ -18,7 +18,7 @@ enum State{Start, ON, ON_REV} state;
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00;	PORTA = 0xFF;
-	DDRC = 0xFF;	PORTC = 0x00;
+	DDRB = 0xFF;	PORTB = 0x00;
 	TimerSet(300);
 	TimerOn();
 	unsigned char tmpA;
@@ -96,7 +96,7 @@ int main(void) {
 		default:	 break;
 	}
 
-	PORTC = tmpC;
+	PORTB = tmpC;
     }
     return 1;
 }

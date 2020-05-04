@@ -22,12 +22,13 @@ int main(void) {
 	TimerSet(100);
 	TimerOn();
 	unsigned char tmpA;
-	unsigned char tmpB;
+	unsigned char tmpB = 0;
+	state = Start;
     /* Insert your solution below */
     while (1) {
 	while(!TimerFlag);
 	TimerFlag = 0;
-	tmpA = ~PINA & 0x01;
+	tmpA = ~PINA & 0x0F;
 
 	switch(state){
 		case Start:	state = Init;
@@ -40,6 +41,9 @@ int main(void) {
 				}
 				else if(tmpA == 0x03){
 					state = Reset;
+				}
+				else {
+					state = Init;
 				}
 				break;
 		case Inc:	if(tmpA == 0){
@@ -67,9 +71,9 @@ int main(void) {
 
 	switch(state){
 		case Start:	tmpB = 7;
+				//tmpB = 0;
 				break;
-		case Init:	tmpB = tmpB;
-				break;
+		case Init:	break;
 		case Inc:	if(tmpB < 9){
 					tmpB++;
 				}
