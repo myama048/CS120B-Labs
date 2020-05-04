@@ -22,7 +22,8 @@ int main(void) {
 	TimerSet(100);
 	TimerOn();
 	unsigned char tmpA;
-	unsigned char tmpB = 0;
+	unsigned char tmpB = 7;
+	unsigned char i = 0;
 	state = Start;
     /* Insert your solution below */
     while (1) {
@@ -35,9 +36,11 @@ int main(void) {
 				break;
 		case Init:	if(tmpA == 0x01){
 					state = Inc;
+					i = 0;
 				}
 				else if(tmpA == 0x02){
 					state = Dec;
+					i = 0;
 				}
 				else if(tmpA == 0x03){
 					state = Reset;
@@ -49,15 +52,23 @@ int main(void) {
 		case Inc:	if(tmpA == 0){
 					state = Init;
 				}
+				else if (tmpA == 3){
+					state = Reset;
+				}
 				else {
 					state = Inc;
+					i++;
 				}
 				break;
 		case Dec:	if(tmpA == 0){
 					state = Init;
 				}
+				else if(tmpA == 3){
+					state = Reset;
+				}
 				else {
 					state = Dec;
+					i++;
 				}
 				break;
 		case Reset:	if(tmpA == 0){
@@ -74,11 +85,11 @@ int main(void) {
 				//tmpB = 0;
 				break;
 		case Init:	break;
-		case Inc:	if(tmpB < 9){
+		case Inc:	if(tmpB < 9 && i % 10 == 0){
 					tmpB++;
 				}
 				break;
-		case Dec:	if(tmpB > 0){
+		case Dec:	if(tmpB > 0 && i % 10 == 0){
 					tmpB--;
 				}
 				break;
