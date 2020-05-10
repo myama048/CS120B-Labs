@@ -1,7 +1,7 @@
 /*	Author: lab
  *  Partner(s) Name: 
  *	Lab Section:
- *	Assignment: Lab #6  Exercise #
+ *	Assignment: Lab #6  Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -13,7 +13,7 @@
 #include "timer.h" // added
 #endif
 
-enum State{Start, ON, ON_REV} state;
+enum State{Start, ON, PRESS} state;
 
 int main(void) {
     /* Insert DDR and PORT initializations */
@@ -21,82 +21,62 @@ int main(void) {
 	DDRB = 0xFF;	PORTB = 0x00;
 	TimerSet(300);
 	TimerOn();
-	unsigned char tmpA;
-	unsigned char tmpC = 0x00;
-	unsigned char cnt = 0x00;
+	unsigned char tmpA, tmpB = 1;
+	unsigned char i = 1;
+	state = Start;
     /* Insert your solution below */
     while (1) {
 	while(!TimerFlag);
 	TimerFlag = 0;
-	tmpA = ~PINA & 0x01;
+	tmpA = ~PINA & 0x0F;
 
 	switch(state){
-		case Start:	 state = ON;
-			  	 break;
-
-		case ON:	 if(cnt == 3){
-					 state = ON_REV;
-					 cnt = 0;
-				 }
-				 else {
-					 state = ON;
-				 }
-				 break;
-		case ON_REV:	 if(cnt == 3){
-					 state = ON;
-					 cnt = 0;
-				 }
-				 else {
-					 state = ON_REV;
-				 }
-
-		default:	 break;
+		case Start:	state = ON;
+				break;
+		case ON:	if(tmpA == 1){
+					state = PRESS;
+				}
+				else {
+					state = ON;
+				}
+				break;
+		case PRESS:	if(tmpA == 1){
+					state = ON;
+					i = 1;
+				}
+				else{
+					state = PRESS;
+				}
+				break;
+		default:	break;
 	}
 
 	switch(state){
-		case Start:	 break;
-		case ON:	 if(cnt == 0){
-					 tmpC = 0x01;
-					 if(tmpA == 0){
-					 	cnt++;
-					 }
-				 }
-				 else if(cnt == 1){
-					 tmpC = 0x02;
-					 if(tmpA == 0){
-					 	cnt++;
-					 }
-				 }
-				 else {
-					 tmpC = 0x04;
-					 if(tmpA == 0){
-					 	cnt++;
-					 }
-				 }
-				 break;
-		case ON_REV:	 if(cnt == 0){
-				 	 tmpC = 0x04;
-					 if(tmpA == 0){
-						 cnt++;
-					 }
-				 }
-				 else if(cnt == 1){
-					 tmpC = 0x02;
-					 if(tmpA == 0){
-						 cnt++;
-					 }
-				 }
-				 else {
-					 tmpC = 0x01;
-					 if(tmpA == 0){
-						 cnt++;
-					 }
-				 }
-
-		default:	 break;
+		case Start:	break;
+		case ON:	if(i == 1){
+					tmpB = 1;
+				}
+				else if(i == 2){
+					tmpB = 2;
+				}
+				else if(i == 3){
+					tmpB = 4;
+				}
+				else if(i == 4){
+					tmpB = 2;
+				}
+				else if(i == 5){
+					tmpB = 1;
+					i = 1;
+				}
+				i++;
+				break;
+		case PRESS:	tmpB = tmpB;
+				break;
+		default:	break;
 	}
 
-	PORTB = tmpC;
+	PORTB = tmpB;
     }
     return 1;
 }
