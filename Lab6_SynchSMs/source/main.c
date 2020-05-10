@@ -13,7 +13,7 @@
 #include "timer.h" // added
 #endif
 
-enum State{Start, ON, PRESS} state;
+enum State{Start, ON, PRESS, RELEASE} state;
 
 int main(void) {
     /* Insert DDR and PORT initializations */
@@ -40,14 +40,20 @@ int main(void) {
 					state = ON;
 				}
 				break;
-		case PRESS:	if(tmpA == 1){
-					state = ON;
-					i = 1;
+		case PRESS:	if(tmpA == 0){
+					state = RELEASE;
 				}
 				else{
 					state = PRESS;
 				}
 				break;
+		case RELEASE:	if(tmpA == 1){
+					state = ON;
+					i = 1;
+				}
+				else {
+					state = RELEASE;
+				}
 		default:	break;
 	}
 
@@ -73,6 +79,7 @@ int main(void) {
 				break;
 		case PRESS:	tmpB = tmpB;
 				break;
+		case RELEASE:	tmpB = tmpB;
 		default:	break;
 	}
 
