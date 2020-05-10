@@ -14,20 +14,22 @@
 #include "io.h"
 #endif
 
-enum State{Start, Init, Inc, Dec, Reset} state;
+enum State{Start, ON, PRESS, RELEASE, WIN} state;
 
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00;	PORTA = 0xFF;
+	DDRB = 0xFF;	PORTB = 0x00;
 	DDRC = 0xFF;	PORTC = 0x00;
 	DDRD = 0xFF;	PORTD = 0x00;
-	TimerSet(100);
+	TimerSet(300);
 	TimerOn();
-	unsigned char tmpA;
-	unsigned char tmpB = 0;
-	unsigned char i = 0;
+	LCD_init();
+	
+	unsigned char tmpA, tmpB = 1;
+	unsigned char i = 1;
+	unsigned char score = 5;
 	state = Start;
-	LCD_ClearScreen();
     /* Insert your solution below */
     while (1) {
 	while(!TimerFlag);
@@ -35,74 +37,93 @@ int main(void) {
 	tmpA = ~PINA & 0x0F;
 
 	switch(state){
-		case Start:	state = Init;
+
+		case Start:	state = ON;
 				break;
-		case Init:	if(tmpA == 0x01){
-					state = Inc;
-					i = 0;
-				}
-				else if(tmpA == 0x02){
-					state = Dec;
-					i = 0;
-				}
-				else if(tmpA == 0x03){
-					state = Reset;
+		case ON:	if(tmpA == 1){
+					state = PRESS;
+					if(i == 3 || i == 5){
+						score++;
+					}
+					else if(score != 0){
+						score--;
+					}
 				}
 				else {
-					state = Init;
+					state = ON;
 				}
 				break;
-		case Inc:	if(tmpA == 0){
-					state = Init;
+		case PRESS:	if(tmpA == 0 && score < 10){
+					state = RELEASE;	
 				}
-				else if (tmpA == 3){
-					state = Reset;
+				else if(tmpA == 0 && score == 10){
+					state = WIN;
+				}
+				else{
+					state = PRESS;
+				}
+				
+				break;
+		case RELEASE:	if(tmpA == 1){
+					state = ON;
+					i = 1;
 				}
 				else {
-					state = Inc;
-					i++;
+					state = RELEASE;
 				}
 				break;
-		case Dec:	if(tmpA == 0){
-					state = Init;
-				}
-				else if(tmpA == 3){
-					state = Reset;
-				}
-				else {
-					state = Dec;
-					i++;
-				}
-				break;
-		case Reset:	if(tmpA == 0){
-					state = Init;
+		case WIN:	if(tmpA == 1){
+					state = ON;
+					i = 1;
+					score = 5;
 				}
 				else {
-					state = Reset;
-				}		
+					state = WIN;
+				}
 		default:	break;
 	}
 
 	switch(state){
-		case Start:	tmpB = 7;
-				//tmpB = 0;
-				break;
-		case Init:	break;
-		case Inc:	if(tmpB < 9 && i % 10 == 0){
-					tmpB++;
+		case Start:	break;
+		case ON:	if(i == 1){
+					tmpB = 1;
 				}
-				break;
-		case Dec:	if(tmpB > 0 && i % 10 == 0){
-					tmpB--;
+				else if(i == 2){
+					tmpB = 2;
 				}
+				else if(i == 3){
+					tmpB = 4;
+				}
+				else if(i == 4){
+					tmpB = 2;
+				}
+				else if(i == 5){
+					tmpB = 1;
+					i = 1;
+				}
+				i++;
 				break;
-		case Reset:	tmpB = 0;
+		case PRESS:	tmpB = tmpB;
+				
+				break;
+		case RELEASE:	tmpB = tmpB;
+				break;
+		case WIN:	LCD_DisplayString(1, "WINNER!!");
 		default:	break;
 	}
 
-	//PORTB = tmpB;
-	LCD_Cursor(1);
-	LCD_WriteData(tmpB + '0');
+	PORTB = tmpB;
+	if(score < 10){
+		LCD_ClearScreen();
+		LCD_Cursor(1);
+		LCD_WriteData(score + '0');
+	}
+	/*
+	else if(score == 10){
+		LCD_DisplayString(1, "WINNER!!");
+		score = 5;
+	}
+	*/
     }
     return 1;
 }
