@@ -79,5 +79,4 @@ void delay_ms(int miliSec) //for 8 Mhz crystal
    asm("nop");
   }
 }
-io.c
-Displaying io.c.
+
