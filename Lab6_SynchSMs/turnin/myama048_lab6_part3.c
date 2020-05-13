@@ -1,6 +1,6 @@
-/*	Author: lab
+/*	Author: Masashi Yamaguchi
  *  Partner(s) Name: 
- *	Lab Section:
+ *	Lab Section:26
  *	Assignment: Lab #6  Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
