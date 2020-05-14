@@ -1,7 +1,7 @@
-/*	Author: lab
- *  Partner(s) Name: 
+/*	Author: Masashi Yamaguchi
+ *  Partner(s) Name: 26
  *	Lab Section:
- *	Assignment: Lab #6  Exercise #3
+ *	Assignment: Lab #7  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
