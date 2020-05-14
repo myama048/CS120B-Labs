@@ -7,6 +7,8 @@
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
+// Demo Video: https://www.youtube.com/watch?v=ak1uOcTAXUI
+// this video includes all demos; part 1 - 3
 #include <avr/io.h>
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
