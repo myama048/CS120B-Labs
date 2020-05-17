@@ -25,39 +25,41 @@ int main(void) {
 
 
 	unsigned short x;
-	//unsigned short y;
+	unsigned short y;
 	unsigned short z;
 	unsigned char tmpB = 0;
 	ADC_init();
-	const unsigned short MAX = 100;
-	const unsigned short MIN = 39;
+	const unsigned short MAX = 103;
+	const unsigned short MIN = 48;
     /* Insert your solution below */
     while (1) {
 	x = ADC;
-	//y = MAX / 2;
-	z = (MAX - MIN) / 8;
+	y = MAX / 8;
+	z = MIN;
+	//z = (MAX - MIN) / 8;
+	//z = MIN + (MAX/8)
 	if(x > z){
 		tmpB = 1;
 	}
-	if(x > 2*z){
+	if(x > (z+y)){
 		tmpB = 2|tmpB;
 	}
-	if(x > 3*z){
+	if(x > (z+2*y)){
 		tmpB = 4|tmpB;
 	}
-	if(x > 4*z){
+	if(x > (z+3*y)){
 		tmpB = 8|tmpB;
 	}
-	if(x > 5*z){
+	if(x > (z+4*y)){
 		tmpB = 16|tmpB;
 	}
-	if(x > 6*z){
+	if(x > (z+5*y)){
 		tmpB = 32|tmpB;
 	}
-	if(x > 7*z){
+	if(x > (z+6*y)){
 		tmpB = 64|tmpB;
 	}
-	if(x > 8*z){
+	if(x > (z+7*y)){
 		tmpB = 128|tmpB;
 	}
 

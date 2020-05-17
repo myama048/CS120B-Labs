@@ -28,8 +28,8 @@ int main(void) {
 	unsigned short y;
 	unsigned char tmpB;
 	ADC_init();
-	const unsigned short MAX = 100;
-	const unsigned short MIN = 39;
+	const unsigned short MAX = 103;
+	const unsigned short MIN = 48;
     /* Insert your solution below */
     while (1) {
 	x = ADC;
