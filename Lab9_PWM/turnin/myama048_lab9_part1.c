@@ -15,14 +15,31 @@
 
 int main(void) {
     /* Insert DDR and PORT initializations */
-	DDRB = 0x00;	PORTB = 0xFF;
-	DDRD = 0xFF;	PORTD = 0x00;
+	DDRA = 0x00;	PORTA = 0xFF;
+	DDRB = 0xFF;	PORTB = 0x00;
 
-
-		
+	PWM_on();
+	double frequency = 0;
+	unsigned char tmpA;	
     /* Insert your solution below */
     while (1) {
+	tmpA = ~PINA & 0xFF;
 
+	if(tmpA == 1){
+		frequency = 261.63; //C
+	}
+	else if(tmpA == 2){
+		frequency = 293.66; //D
+	}
+	else if(tmpA == 4){
+		frequency = 329.63; //E
+	}
+	else {
+		//do nothing
+	}
+	
+	set_PWM(frequency);
+	//PORTB = ;
     }
     return 1;
 }
