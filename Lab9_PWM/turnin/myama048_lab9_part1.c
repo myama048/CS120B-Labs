@@ -1,6 +1,6 @@
 /*	Author: Masashi Yamaguchi
  *  Partner(s) Name: 
- *	Lab Section:
+ *	Lab Section:26
  *	Assignment: Lab #9  Exercise #1
  *	Exercise Description: [optional - include for your own benefit]
  *
@@ -13,6 +13,8 @@
 #include "PWM.h"
 #endif
 
+enum State{Start, Silent, C,D,E} state;
+
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0x00;	PORTA = 0xFF;
@@ -20,22 +22,65 @@ int main(void) {
 
 	PWM_on();
 	double frequency = 0;
-	unsigned char tmpA;	
+	double c = 261.63;
+	double d = 293.66;
+	double e = 329.63;
+	unsigned char tmpA;
+	state = Start;	
     /* Insert your solution below */
     while (1) {
-	tmpA = ~PINA & 0xFF;
 
-	if(tmpA == 1){
-		frequency = 261.63; //C
+	tmpA = ~PINA & 0xFF;
+	switch(state){
+		case Start:	state = Silent;
+				break;
+		case Silent:	if(tmpA == 1){
+					state = C;
+				}
+				else if(tmpA == 2){
+					state = D;
+				}
+				else if(tmpA == 4){
+					state = E;
+				}
+				else {
+					state = Silent;
+				}
+				break;
+		case C:		if(tmpA == 1){
+					state = C;
+				}
+				else{
+					state = Silent;
+				}
+				break;
+		case D:		if(tmpA == 2){
+					state = D;
+				}
+				else{
+					state = Silent;
+				}
+				break;
+		case E:		if(tmpA == 4){
+					state = E;
+				}
+				else {
+					state = Silent;
+				}
+				break;
+		default:	break;
 	}
-	else if(tmpA == 2){
-		frequency = 293.66; //D
-	}
-	else if(tmpA == 4){
-		frequency = 329.63; //E
-	}
-	else {
-		//do nothing
+
+	switch(state){
+		case Start:	break;
+		case Silent:	frequency = 0;
+				break;
+		case C:		frequency = c;
+				break;
+		case D:		frequency = d;
+				break;
+		case E:		frequency = e;
+		default:	break;
 	}
 	
 	set_PWM(frequency);
