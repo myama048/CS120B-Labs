@@ -17,11 +17,10 @@
 enum SMthree{Start1,ZERO,ONE,TWO} state1;
 enum SMblink{Start2,ON,OFF} state2;
 enum SMoutput{A,B} state3;
-enum SMspeaker{OFF1,S1,S2} state4;
 
 unsigned char ledThree = 0x00;
 unsigned char ledBlink = 0x00;
-unsigned char speaker = 0x00;
+unsigned char button = 0x00;
 
 
 void threeLEDs(){
@@ -67,6 +66,7 @@ void blinkingLEDs(){
 }
 
 void output(){
+	button = (~PINA & 0x04) >> 2;
 	switch(state3){
 		case A:		state3 = B;
 				break;
@@ -77,46 +77,19 @@ void output(){
 	}
 	
 	switch(state3){
-		case A:		PORTB = ledThree | ledBlink | speaker;
+		case A:		if(!button){
+					PORTB = ledThree | ledBlink | 0x10;
+				}
+				else{
+					PORTB = ledThree | ledBlink;
+				}
 				break;
-		case B:		PORTB = ledThree | ledBlink | speaker;
+		case B:		PORTB = ledThree | ledBlink | 0x10;
 		default:	break;
 	}
 }
 
-void Speaker(unsigned char a){
-	switch(state4){
-		case OFF1:	if(a == 4){
-					state4 = S1;
-				}
-				else {
-					state4 = OFF1;
-				}
-				break;
-		case S1:	if(a != 4){
-					state4 = OFF;
-				}
-				else{
-					state4 = S2;
-				}
-		case S2:	if(a != 4){
-					state4 = OFF;
-				}
-				else{
-					state4 = S1;
-				}
-				break;
-		default:	break;
-	}
-	switch(state4){
-		case OFF1:	speaker = 0;
-				break;
-		case S1:	speaker = 0x08;
-				break;
-		case S2:	speaker = 0;
-		default:	break;
-	}
-}
+
 
 int main(void) {
     /* Insert DDR and PORT initializations */
@@ -126,12 +99,9 @@ int main(void) {
 	TimerSet(2);
 	unsigned long threeLEDPeriod = 300;
 	unsigned long blinkLEDPeriod = 1000;
-	unsigned char speakerPeriod = 2;
-	unsigned char tmpA = 0;
 	
     /* Insert your solution below */
     while (1) {
-	tmpA = ~PINA & 0xFF;
 	while(!TimerFlag){};
 	TimerFlag = 0;
 
@@ -143,15 +113,11 @@ int main(void) {
 		blinkingLEDs();
 		blinkLEDPeriod = 0;
 	}
-	if(speakerPeriod == 2){
-		Speaker(tmpA);
-		speakerPeriod = 0;
-	}
+
 	output();
 	
 	threeLEDPeriod += 2;
 	blinkLEDPeriod += 2;
-	speakerPeriod += 2;
     }
     return 1;
 }

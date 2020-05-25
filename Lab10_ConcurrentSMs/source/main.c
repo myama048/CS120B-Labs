@@ -20,6 +20,7 @@ enum SMoutput{A,B} state3;
 
 unsigned char ledThree = 0x00;
 unsigned char ledBlink = 0x00;
+unsigned char button = 0x00;
 
 
 void threeLEDs(){
@@ -65,6 +66,7 @@ void blinkingLEDs(){
 }
 
 void output(){
+	button = (~PINA & 0x04) >> 2;
 	switch(state3){
 		case A:		state3 = B;
 				break;
@@ -75,9 +77,14 @@ void output(){
 	}
 	
 	switch(state3){
-		case A:		PORTB = ledThree | ledBlink;
+		case A:		if(!button){
+					PORTB = ledThree | ledBlink | 0x10;
+				}
+				else{
+					PORTB = ledThree | ledBlink;
+				}
 				break;
-		case B:		PORTB = ledThree | ledBlink;
+		case B:		PORTB = ledThree | ledBlink | 0x10;
 		default:	break;
 	}
 }
@@ -86,6 +93,7 @@ void output(){
 
 int main(void) {
     /* Insert DDR and PORT initializations */
+	DDRA = 0x00;	PORTA = 0xFF;
 	DDRB = 0xFF;	PORTB = 0x00;
 	TimerOn();
 	TimerSet(2);
