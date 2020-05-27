@@ -9,8 +9,9 @@ void Transmit()
 {
     switch(transmit_state)
     {
-        case TInit:
-            break;
+        case TInit:	transmit_state = Output;
+           		break;
+	case Output:	break;
         default:
             transmit_state = TInit;
             break;
@@ -19,6 +20,7 @@ void Transmit()
     {
         case TInit:
             break;
+	case Output:	PORTB = (max << 3) | (4 /*ZC*/) | (detect << 1) | ping;
         default:
             break;
     }
