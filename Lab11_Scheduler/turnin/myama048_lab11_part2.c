@@ -1,7 +1,7 @@
 /*	Author: Masashi Yamaguchi
  *  Partner(s) Name: 
  *	Lab Section: 26
- *	Assignment: Lab #11  Exercise #4
+ *	Assignment: Lab #11  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -24,11 +24,10 @@
 #include "simAVRHeader.h"
 #endif
 enum State{Start} state;
-unsigned char output = 0;
-unsigned char c = 2;
+char cursor_pos = 32;
 
 
-void keypadSM(int kstate){
+int keypadSM(int kstate){
 	unsigned char x = GetKeypadKey();
 	switch(kstate){
 		case Start:	kstate = Start;
@@ -38,73 +37,50 @@ void keypadSM(int kstate){
 	}
 	
 	switch(x){
-		case '\0':	output = 0x1F; 	break;
-		case '1':	output = 0x01;	break;
-		case '2':	output = 0x02;	break;
-		case '3':	output = 0x03;	break;
-		case '4':	output = 0x04;	break;
-		case '5':	output = 0x05;	break;
-		case '6':	output = 0x06;	break;
-		case '7':	output = 0x07;	break;
-		case '8':	output = 0x08;	break;
-		case '9':	output = 0x09;	break;
-		case 'A':	output = 0x0A;	break;
-		case 'B':	output = 0x0B;	break;
-		case 'C':	output = 0x0C;	break;
-		case 'D':	output = 0x0D;	break;
-		case '*':	output = 0x0E;	break;
-		case '0':	output = 0x00;	break;
-		case '#':	output = 0x0F;	break;
-		default:	output = 0x1B;	break;
+		case '\0':	PORTB = 0x1F; 	break;
+		case '1':	PORTB = 0x01;	break;
+		case '2':	PORTB = 0x02;	break;
+		case '3':	PORTB = 0x03;	break;
+		case '4':	PORTB = 0x04;	break;
+		case '5':	PORTB = 0x05;	break;
+		case '6':	PORTB = 0x06;	break;
+		case '7':	PORTB = 0x07;	break;
+		case '8':	PORTB = 0x08;	break;
+		case '9':	PORTB = 0x09;	break;
+		case 'A':	PORTB = 0x0A;	break;
+		case 'B':	PORTB = 0x0B;	break;
+		case 'C':	PORTB = 0x0C;	break;
+		case 'D':	PORTB = 0x0D;	break;
+		case '*':	PORTB = 0x0E;	break;
+		case '0':	PORTB = 0x00;	break;
+		case '#':	PORTB = 0x0F;	break;
+		default:	PORTB = 0x1B;	break;
 	}
-	return;
+	return kstate;
 }
 
-enum Rep{state1, out} r_state;
+enum Dary_state{DARY} d_state;
 
 
-int Replace(int r_state){
-	switch(r_state){
-		case state1:	r_state = out;
+int Dary(d_state){
+	switch(d_state){
+		case DARY:	d_state = DARY;
 				break;
-		case out:	r_state = out;
-				break;
-		default:	r_state = state1;
+		default:	d_state = DARY;
 				break;
 	}
-	switch(r_state){
-		case state1:	break;
-		case out:	if(output != 0x1F){
-					if(output >= 0 && output <= 9){
-						LCD_WriteData('0' + output);
-					}
-					else if(output == 0x0A){
-						LCD_WriteData('A');
-					}
-					else if(output == 0x0B){
-						LCD_WriteData('B');
-					}
-					else if(output == 0x0C){
-						LCD_WriteData('C');
-					}
-					else if(output == 0x0D){
-						LCD_WriteData('D');
-					}
-					else if(output == 0x0E){
-						LCD_WriteData('*');
-					}
-					else if(output == 0x0F){
-						LCD_WriteData('#');
-					}
-					if(c == 17){
-						c = 1;
-					}
-					LCD_Cursor(c);
-					c++;
+	switch(d_state){
+		case DARY:	LCD_ClearScreen();
+				LCD_Cursor(cursor_pos);
+				LCD_DisplayString(cursor_pos, "CS120B is Legend... wait for it DARY!");
+				cursor_pos--;
+				if(cursor_pos == -30){
+					cursor_pos = 32;
 				}
+				break;
 		default:	break;
 	}
-	return r_state;
+	return d_state;
 }
 
 int main(void) {
@@ -113,29 +89,25 @@ int main(void) {
 	DDRC = 0xFF;	PORTC = 0x00;
 	DDRD = 0xFF;	PORTD = 0x00;
 	DDRA = 0xF0;	PORTA = 0x0F;
-	
-	
+
 	static task task1;
 	task *tasks[] = { &task1 };
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 
 	//const char start = -1;
 
-	task1.state = state1;
+	task1.state = DARY;
 	task1.period = 200;
 	task1.elapsedTime = task1.period;
-	task1.TickFct = &Replace;
+	task1.TickFct = &Dary;
 
 	LCD_init();
 	LCD_ClearScreen();
-	LCD_DisplayString(1,"Congraturations");
-	LCD_Cursor(1);
 	TimerSet(50);
 	TimerOn();
 	unsigned short i;
     /* Insert your solution below */
     while (1) {
-	keypadSM(state);
 	for(i = 0; i < numTasks; i++){
 		if(tasks[i]->elapsedTime == tasks[i]->period){
 			tasks[i]->state = tasks[i]->TickFct(tasks[i]->state);
