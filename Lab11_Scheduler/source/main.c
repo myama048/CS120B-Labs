@@ -123,53 +123,7 @@ void ObstaclesSM(int o_state){
 }
 
 enum PState{pa_state1,pa_state2,pa_state3} pa_state;
-void pause(int pa_state, int output){
-	switch(pa_state){
-		case pa_state1:	LCD_DisplayString(1,"pause");
-				if(output == 1){
-					pa_state = pa_state2;
-				}
-				else{	
-					pa_state = pa_state1;
-				}
-				break;
-		case pa_state2:	LCD_DisplayString(1,"hello world");
-				if(player == top || player == bottom){
-					pa_state = pa_state3;
-				}
-				else{
-					pa_state = pa_state2;
-				}
-				break;
-		case pa_state3:	if(output == 0x01){
-					pa_state = pa_state2;
-				}
-				else{
-					pa_state = pa_state3;
-				}
-		default:	break;
-	}
-	
-	switch(p_state){
-		case pa_state1:	break;
-		case pa_state2:	ObstaclesSM(o_state); 	//set top and bottom
-				PlayerSM(p_state);	//set player
-				TimerSet(500);					
-				LCD_ClearScreen();
-				LCD_Cursor(player);
-				LCD_WriteData('_');
-				LCD_Cursor(top);
-				LCD_WriteData('#');
-				LCD_Cursor(bottom);
-				LCD_WriteData('#');
-				break;
-		case pa_state3:	LCD_ClearScreen();
-				LCD_DisplayString(1,"Game Over");
-				break;
-		default:	break;
-	}
-				
-}
+
 
 int main(void) {
     /* Insert DDR and PORT initializations */
@@ -203,7 +157,29 @@ int main(void) {
     while (1) {
 	TimerSet(100);
 	keypadSM(Start);
-	pause(pa_state, output);
+	//PlayerSM(p_state);
+	//ObstaclesSM(o_state);
+	if(player == top || player == bottom){
+		TimerSet(1000);
+		LCD_ClearScreen();
+		LCD_DisplayString(1,"Game Over");
+		player = 2;
+		top = 9;
+		bottom = 32;
+	}
+	else{
+		ObstaclesSM(o_state); 	//set top and bottom
+		PlayerSM(p_state);	//set player
+		TimerSet(500);					
+		LCD_ClearScreen();
+		LCD_Cursor(player);
+		LCD_WriteData('_');
+		LCD_Cursor(top);
+		LCD_WriteData('#');
+		LCD_Cursor(bottom);
+		LCD_WriteData('#');
+	}
+				
 	while(!TimerFlag);
 	TimerFlag = 0;
     }
